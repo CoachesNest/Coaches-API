@@ -18,15 +18,16 @@ async function bootstrap() {
 
   // Swagger setup
   const config = new DocumentBuilder()
-    .setTitle('Coaches API')
-    .setDescription('The Coaches API description')
+    .setTitle('Coaches Server')
+    .setDescription('The Coaches Server description')
     .setVersion('1.0')
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
-
+  SwaggerModule.setup('coaches_api', app, document);
+  
   await app.listen(3000);
+  console.log('Swagger is running on http://localhost:3000/coaches_api');
 }
 bootstrap();
 
