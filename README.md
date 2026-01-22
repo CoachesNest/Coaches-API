@@ -1,5 +1,7 @@
 ## Coaches_Server 🖥️
 
+![CI](https://github.com/Xoulomon/Coaches_Server/actions/workflows/ci.yml/badge.svg)
+
 *Backend services for the Coaches platform*
 
 ## 📝 Overview
