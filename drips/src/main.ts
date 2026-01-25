@@ -15,6 +15,17 @@ async function bootstrap() {
     }),
   );
 
+  const { DocumentBuilder, SwaggerModule } = await import('@nestjs/swagger');
+  const config = new DocumentBuilder()
+    .setTitle('Coaches Drips API')
+    .setDescription('The Coaches Drips API documentation')
+    .setVersion('1.0')
+    .addBearerAuth()
+    .build();
+  
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('docs', app, document);
+
   const configService = app.get(AppConfigService);
   const port = configService.port;
 
