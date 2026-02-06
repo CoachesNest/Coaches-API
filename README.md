@@ -1,9 +1,5 @@
 ## Coaches_Server 🖥️
 
-![CI](https://github.com/Xoulomon/Coaches_Server/actions/workflows/ci.yml/badge.svg)
-
-_Backend services for the Coaches platform_
-
 ## 📝 Overview
 
 **Coaches_Server** provides off-chain services that support the Coaches ecosystem.  
