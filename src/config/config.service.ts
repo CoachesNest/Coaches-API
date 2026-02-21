@@ -42,6 +42,38 @@ export class ConfigService {
   }
 
   /**
+   * 📧 Mail Configuration
+   */
+  get mailSender(): string {
+    return process.env.MAIL_SENDER ?? 'noreply@coaches.com';
+  }
+
+  get mailSubjectPrefix(): string {
+    return process.env.MAIL_SUBJECT_PREFIX ?? '[Coaches]';
+  }
+
+  get mailAppName(): string {
+    return process.env.MAIL_APP_NAME ?? 'Coaches';
+  }
+
+  get smtpHost(): string {
+    return process.env.SMTP_HOST ?? 'smtp.example.com';
+  }
+
+  get smtpPort(): number {
+    return parseInt(process.env.SMTP_PORT ?? '587', 10);
+  }
+
+  get smtpUser(): string {
+    return process.env.SMTP_USER ?? '';
+  }
+
+  get smtpPassword(): string {
+    return process.env.SMTP_PASSWORD ?? '';
+  }
+
+  get smtpSecure(): boolean {
+    return process.env.SMTP_SECURE === 'true';
    * 🚦 Rate Limiting Configuration
    */
   get rateLimitEnabled(): boolean {
