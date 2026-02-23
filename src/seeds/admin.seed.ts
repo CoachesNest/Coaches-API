@@ -78,7 +78,7 @@ async function run() {
         firstName: ADMIN_FIRST,
         lastName: ADMIN_LAST,
         email: ADMIN_EMAIL,
-        password: hashedPassword,
+        passwordHash: hashedPassword,
         role: UserRole.ADMIN,
         isActive: true,
       };
