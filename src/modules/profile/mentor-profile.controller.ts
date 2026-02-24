@@ -83,7 +83,7 @@ export class MentorProfileController {
     if (profile.user.id !== req.user.id) {
       throw new Error('Unauthorized to update this profile');
     }
-    return this.mentorProfileService.update(id, updateMentorProfileDto);
+    return this.mentorProfileService.update(id, updateMentorProfileDto, req.user);
   }
 
   @Delete(':id')
@@ -109,7 +109,8 @@ export class MentorProfileController {
   async toggleVerification(
     @Param('id') id: string,
     @Body() toggleVerificationDto: ToggleVerificationDto,
+    @Request() req,
   ) {
-    return this.mentorProfileService.toggleVerification(id, toggleVerificationDto.isVerified);
+    return this.mentorProfileService.toggleVerification(id, toggleVerificationDto.isVerified, req.user);
   }
 }

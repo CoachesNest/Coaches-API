@@ -5,6 +5,8 @@ import { MentorProfile } from '../entities/mentor-profile.entity';
 import { User } from '../../user/entities/user.entity';
 import { CreateMentorProfileDto } from '../dto/create-mentor-profile.dto';
 import { UpdateMentorProfileDto } from '../dto/update-mentor-profile.dto';
+import { ProfileHistoryService } from './profile-history.service';
+import { ProfileType } from '../entities/profile-history.entity';
 
 @Injectable()
 export class MentorProfileService {
@@ -13,6 +15,7 @@ export class MentorProfileService {
     private mentorProfileRepository: Repository<MentorProfile>,
     @InjectRepository(User)
     private userRepository: Repository<User>,
+    private profileHistoryService: ProfileHistoryService,
   ) {}
 
   async create(createMentorProfileDto: CreateMentorProfileDto, userId: string): Promise<MentorProfile> {
@@ -67,11 +70,24 @@ export class MentorProfileService {
     return profile;
   }
 
-  async update(id: string, updateMentorProfileDto: UpdateMentorProfileDto): Promise<MentorProfile> {
+  async update(id: string, updateMentorProfileDto: UpdateMentorProfileDto, changedBy?: User): Promise<MentorProfile> {
     const profile = await this.findOne(id);
+    const oldData = { ...profile };
 
     Object.assign(profile, updateMentorProfileDto);
-    return this.mentorProfileRepository.save(profile);
+    const updated = await this.mentorProfileRepository.save(profile);
+
+    // Log changes to history
+    await this.profileHistoryService.trackChanges(
+      profile.user,
+      ProfileType.MENTOR,
+      profile.id,
+      oldData,
+      updateMentorProfileDto,
+      changedBy,
+    );
+
+    return updated;
   }
 
   async remove(id: string): Promise<void> {
@@ -95,10 +111,25 @@ export class MentorProfileService {
       .getMany();
   }
 
-  async toggleVerification(id: string, isVerified: boolean): Promise<MentorProfile> {
+  async toggleVerification(id: string, isVerified: boolean, changedBy?: User): Promise<MentorProfile> {
     const profile = await this.findOne(id);
+    const oldValue = profile.isVerified;
+
     profile.isVerified = isVerified;
-    return this.mentorProfileRepository.save(profile);
+    const updated = await this.mentorProfileRepository.save(profile);
+
+    // Log verification change to history
+    await this.profileHistoryService.logChange(
+      profile.user,
+      ProfileType.MENTOR,
+      profile.id,
+      'isVerified',
+      oldValue,
+      isVerified,
+      changedBy,
+    );
+
+    return updated;
   }
 
   async findByUserIdOptional(userId: string): Promise<MentorProfile | null> {
