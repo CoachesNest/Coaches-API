@@ -14,6 +14,7 @@ import { ProfileHistoryController } from './profile-history.controller';
 import { AuthModule } from '../auth/auth.module';
 import { UserModule } from '../user/user.module';
 import { UserService } from '../user/providers/user.service';
+import { MentorSkillsModule } from '../mentor_skills/mentor-skills.module';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { MentorProfile } from './entities/mentor-profile.entity';
 import { MenteeProfile } from './entities/mentee-profile.entity';
@@ -29,6 +30,7 @@ import { Wallet } from '../user/entities/wallet.entity';
     MulterModule.register({
       dest: './uploads',
     }),
+    MentorSkillsModule,
   ],
   controllers: [
     ProfileController,

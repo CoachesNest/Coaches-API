@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
+import { MentorSkill } from '../../mentor_skills/entities/mentor-skill.entity';
 import { IsString, IsOptional, IsArray, IsNumber, IsUrl } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { User } from '../../user/entities/user.entity';
@@ -20,12 +21,8 @@ export class MentorProfile {
   @Column({ type: 'text', nullable: true })
   bio?: string;
 
-  @ApiPropertyOptional({ description: 'List of technical skills', example: ['JavaScript', 'React', 'Node.js', 'TypeScript'] })
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  @Column('text', { array: true, nullable: true })
-  skills?: string[];
+  @OneToMany(() => MentorSkill, mentorSkill => mentorSkill.mentor)
+  mentorSkills: MentorSkill[];
 
   @ApiPropertyOptional({ description: 'Years of experience', example: 5 })
   @IsOptional()
