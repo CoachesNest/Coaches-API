@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException, Inject, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { MentorProfile } from '../entities/mentor-profile.entity';
@@ -7,6 +7,7 @@ import { CreateMentorProfileDto } from '../dto/create-mentor-profile.dto';
 import { UpdateMentorProfileDto } from '../dto/update-mentor-profile.dto';
 import { ProfileHistoryService } from './profile-history.service';
 import { ProfileType } from '../entities/profile-history.entity';
+import { MentorSkillsService } from '../../mentor_skills/mentor-skills.service';
 
 @Injectable()
 export class MentorProfileService {
@@ -16,6 +17,9 @@ export class MentorProfileService {
     @InjectRepository(User)
     private userRepository: Repository<User>,
     private profileHistoryService: ProfileHistoryService,
+    
+    @Inject(forwardRef(() => MentorSkillsService))
+    private mentorSkillsService: MentorSkillsService
   ) {}
 
   async create(createMentorProfileDto: CreateMentorProfileDto, userId: string): Promise<MentorProfile> {
@@ -44,30 +48,28 @@ export class MentorProfileService {
     return this.mentorProfileRepository.save(mentorProfile);
   }
 
-  async findByUserId(userId: string): Promise<MentorProfile> {
+  async findByUserId(userId: string): Promise<any> {
     const profile = await this.mentorProfileRepository.findOne({
       where: { user: { id: userId } },
       relations: ['user'],
     });
-
     if (!profile) {
       throw new NotFoundException('Mentor profile not found');
     }
-
-    return profile;
+    const skills = await this.mentorSkillsService.getMentorSkills(profile.id);
+    return { ...profile, skills };
   }
 
-  async findOne(id: string): Promise<MentorProfile> {
+  async findOne(id: string): Promise<any> {
     const profile = await this.mentorProfileRepository.findOne({
       where: { id },
       relations: ['user'],
     });
-
     if (!profile) {
       throw new NotFoundException('Mentor profile not found');
     }
-
-    return profile;
+    const skills = await this.mentorSkillsService.getMentorSkills(profile.id);
+    return { ...profile, skills };
   }
 
   async update(id: string, updateMentorProfileDto: UpdateMentorProfileDto, changedBy?: User): Promise<MentorProfile> {

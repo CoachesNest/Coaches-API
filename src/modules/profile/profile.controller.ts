@@ -41,7 +41,7 @@ export class ProfileController {
       if (mentorProfile) {
         Object.assign(publicProfile, {
           bio: mentorProfile.bio,
-          skills: mentorProfile.skills,
+          skills: mentorProfile.mentorSkills || [],
           experienceYears: mentorProfile.experienceYears,
           title: mentorProfile.title,
           company: mentorProfile.company,
