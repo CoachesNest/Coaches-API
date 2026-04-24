@@ -67,7 +67,11 @@ async function bootstrap() {
       .setTitle('Coaches API')
       .setDescription('Enterprise-level API for Coaches platform')
       .setVersion('1.0')
-      .addTag('api')
+      .addTag('Authentication')
+      .addTag('Wallet')
+      .addTag('Session Management')
+      .addTag('Users')
+      .addBearerAuth()
       .build();
 
     const document = SwaggerModule.createDocument(app, config);
